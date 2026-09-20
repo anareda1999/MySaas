@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   CreditCard,
@@ -18,6 +18,7 @@ import {
   Plus,
   ShieldCheck,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function DashboardLayout({
   children,
@@ -25,7 +26,36 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("Invité");
+  const [userName, setUserName] = useState<string>("Utilisateur");
+
+  useEffect(() => {
+    async function loadUser() {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        setUserEmail(user.email || "Utilisateur");
+        setUserName(
+          user.user_metadata?.full_name ||
+            user.email?.split("@")[0] ||
+            "Membre"
+        );
+      }
+    }
+    loadUser();
+  }, []);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  };
 
   const navItems = [
     { name: "Vue d'ensemble", href: "/dashboard", icon: LayoutDashboard },
@@ -113,22 +143,30 @@ export default function DashboardLayout({
         {/* User Account / Logout */}
         <div className="pt-4 border-t border-white/10 space-y-3">
           <div className="flex items-center gap-3 px-2">
-            <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-white text-xs">
-              AR
+            <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-white text-xs uppercase">
+              {userName.substring(0, 2)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-white truncate">anareda1999</p>
-              <p className="text-[11px] text-slate-400 truncate">anareda1999@gmail.com</p>
+              <p className="text-xs font-semibold text-white truncate">{userName}</p>
+              <p className="text-[11px] text-slate-400 truncate">{userEmail}</p>
             </div>
           </div>
 
-          <Link
-            href="/"
-            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Retour au site public
-          </Link>
+          <div className="flex flex-col gap-1">
+            <button
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors text-left"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Se déconnecter
+            </button>
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-3 py-1.5 text-[11px] text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              ← Retour au site public
+            </Link>
+          </div>
         </div>
       </aside>
 
