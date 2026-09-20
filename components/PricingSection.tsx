@@ -2,24 +2,27 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Sparkles, ArrowRight } from "lucide-react";
+import { Check, Sparkles, ArrowRight, Wallet, Globe } from "lucide-react";
 
 export default function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
+  const [currency, setCurrency] = useState<"dzd" | "eur">("dzd");
 
   const plans = [
     {
       name: "Starter",
       description: "Parfait pour tester votre idée et valider vos premiers clients payants.",
-      priceMonthly: "0€",
-      priceAnnual: "0€",
+      priceEurMonthly: "0€",
+      priceEurAnnual: "0€",
+      priceDzdMonthly: "0 DZD",
+      priceDzdAnnual: "0 DZD",
       period: "pour toujours",
       features: [
         "Jusqu'à 100 utilisateurs actifs",
         "Tableau de bord analytics de base",
         "Export CSV des métriques",
         "Support communautaire",
-        "Intégration Stripe basique",
+        "Paiement Edahabia & CIB ou Carte",
       ],
       ctaText: "Démarrer gratuitement",
       ctaHref: "/register",
@@ -28,8 +31,10 @@ export default function PricingSection() {
     {
       name: "Pro",
       description: "La formule complète pour accélérer votre croissance et automatiser vos flux.",
-      priceMonthly: "29€",
-      priceAnnual: "23€",
+      priceEurMonthly: "29€",
+      priceEurAnnual: "23€",
+      priceDzdMonthly: "3 900 DZD",
+      priceDzdAnnual: "3 100 DZD",
       period: "/ mois",
       badge: "Le plus populaire",
       features: [
@@ -38,7 +43,7 @@ export default function PricingSection() {
         "Gestion multi-projets (jusqu'à 5)",
         "Webhooks & API illimitée",
         "Support prioritaire par email & chat (< 2h)",
-        "Portail client Stripe en marque blanche",
+        "Portail client et factures conformes",
         "Exports automatisés & rapports PDF",
       ],
       ctaText: "Commencer l'essai de 14 jours",
@@ -48,8 +53,10 @@ export default function PricingSection() {
     {
       name: "Entreprise",
       description: "Pour les structures exigeantes nécessitant haute disponibilité et sur-mesure.",
-      priceMonthly: "99€",
-      priceAnnual: "79€",
+      priceEurMonthly: "99€",
+      priceEurAnnual: "79€",
+      priceDzdMonthly: "12 900 DZD",
+      priceDzdAnnual: "10 500 DZD",
       period: "/ mois",
       features: [
         "Tout ce qui est inclus dans le plan Pro",
@@ -82,32 +89,63 @@ export default function PricingSection() {
             Investissez dans la rentabilité de votre entreprise
           </h2>
           <p className="text-slate-400 text-base sm:text-lg">
-            Aucun frais caché. Annulez ou changez de forfait en 1 clic à tout moment depuis votre dashboard.
+            Réglez en <strong>Dinars (Edahabia / CIB)</strong> ou en <strong>Euros / Dollars (Carte Internationale)</strong>.
           </p>
 
-          {/* Toggle Switch */}
-          <div className="pt-4 flex items-center justify-center gap-3">
-            <span className={`text-sm font-medium ${billingCycle === "monthly" ? "text-white" : "text-slate-400"}`}>
-              Facturation mensuelle
-            </span>
-            <button
-              onClick={() => setBillingCycle(billingCycle === "monthly" ? "annual" : "monthly")}
-              className="relative inline-flex h-7 w-14 items-center rounded-full bg-slate-800 p-1 transition-colors border border-white/10 hover:border-indigo-500/50"
-              aria-label="Changer le cycle de facturation"
-            >
-              <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-indigo-500 shadow-md transition-transform ${
-                  billingCycle === "annual" ? "translate-x-7" : "translate-x-0"
+          {/* Currency and Billing Controls */}
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* Currency Selector */}
+            <div className="flex items-center bg-white/5 p-1 rounded-xl border border-white/10 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setCurrency("dzd")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  currency === "dzd"
+                    ? "bg-amber-500 text-slate-950 font-bold shadow-sm"
+                    : "text-slate-400 hover:text-white"
                 }`}
-              />
-            </button>
-            <div className="flex items-center gap-1.5">
-              <span className={`text-sm font-medium ${billingCycle === "annual" ? "text-white" : "text-slate-400"}`}>
-                Facturation annuelle
+              >
+                <Wallet className="h-3.5 w-3.5" />
+                DZD (Edahabia / CIB)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrency("eur")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  currency === "eur"
+                    ? "bg-indigo-600 text-white font-bold shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <Globe className="h-3.5 w-3.5" />
+                EUR € (International)
+              </button>
+            </div>
+
+            {/* Monthly / Annual Toggle Switch */}
+            <div className="flex items-center gap-3">
+              <span className={`text-xs font-medium ${billingCycle === "monthly" ? "text-white" : "text-slate-400"}`}>
+                Mensuel
               </span>
-              <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                -20% offert
-              </span>
+              <button
+                onClick={() => setBillingCycle(billingCycle === "monthly" ? "annual" : "monthly")}
+                className="relative inline-flex h-6 w-12 items-center rounded-full bg-slate-800 p-1 transition-colors border border-white/10 hover:border-indigo-500/50"
+                aria-label="Changer le cycle de facturation"
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-indigo-500 shadow-md transition-transform ${
+                    billingCycle === "annual" ? "translate-x-6" : "translate-x-0"
+                  }`}
+                />
+              </button>
+              <div className="flex items-center gap-1.5">
+                <span className={`text-xs font-medium ${billingCycle === "annual" ? "text-white" : "text-slate-400"}`}>
+                  Annuel
+                </span>
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                  -20%
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -115,7 +153,15 @@ export default function PricingSection() {
         {/* Pricing Cards */}
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
           {plans.map((plan) => {
-            const price = billingCycle === "monthly" ? plan.priceMonthly : plan.priceAnnual;
+            const price =
+              currency === "dzd"
+                ? billingCycle === "monthly"
+                  ? plan.priceDzdMonthly
+                  : plan.priceDzdAnnual
+                : billingCycle === "monthly"
+                ? plan.priceEurMonthly
+                : plan.priceEurAnnual;
+
             return (
               <div
                 key={plan.name}
@@ -140,7 +186,7 @@ export default function PricingSection() {
                   </p>
 
                   <div className="mt-6 flex items-baseline gap-2">
-                    <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                       {price}
                     </span>
                     <span className="text-sm font-medium text-slate-400">{plan.period}</span>
