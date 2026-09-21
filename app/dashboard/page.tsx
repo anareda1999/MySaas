@@ -14,6 +14,8 @@ import {
   Clock,
   ExternalLink,
   Sparkles,
+  FileText,
+  ArrowRight,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -164,6 +166,49 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Quick Launch Suite Tools */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <Link
+          href="/dashboard/ai-studio"
+          className="rounded-2xl glass-panel glass-panel-hover p-6 border border-indigo-500/20 flex items-center justify-between group transition-all"
+        >
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/25 group-hover:scale-105 transition-transform">
+              <Sparkles className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-white group-hover:text-indigo-300 transition-colors">
+                Studio IA Marketing & Vente
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Générez des posts réseaux, cold emails et fiches produits en FR, Arabe et Anglais.
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="h-5 w-5 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
+        </Link>
+
+        <Link
+          href="/dashboard/invoices"
+          className="rounded-2xl glass-panel glass-panel-hover p-6 border border-emerald-500/20 flex items-center justify-between group transition-all"
+        >
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center text-white shadow-md shadow-emerald-600/25 group-hover:scale-105 transition-transform">
+              <FileText className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-white group-hover:text-emerald-300 transition-colors">
+                Factures & Devis PDF Pro
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Édition conforme avec NIF, RC, TVA et calcul automatique du timbre fiscal en DZD et EUR.
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="h-5 w-5 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
+        </Link>
       </div>
 
       {/* Analytics Chart & Breakdown */}

@@ -17,6 +17,7 @@ import {
   X,
   Plus,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -59,6 +60,8 @@ export default function DashboardLayout({
 
   const navItems = [
     { name: "Vue d'ensemble", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Studio IA Marketing", href: "/dashboard/ai-studio", icon: Sparkles },
+    { name: "Factures & Devis PDF", href: "/dashboard/invoices", icon: FileText },
     { name: "Facturation & Plans", href: "/dashboard/billing", icon: CreditCard },
     { name: "Analytics avancés", href: "/dashboard#analytics", icon: BarChart2 },
     { name: "Membres & Équipe", href: "/dashboard#team", icon: Users },
